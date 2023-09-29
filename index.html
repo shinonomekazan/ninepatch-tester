@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<title>ナインパッチ / 9 slice テスター</title>
+		<style>
+			#distContainer {
+				padding: 1rem;
+				border: 1px solid black;
+				display: flex;
+				justify-content: center;
+			}
+			canvas {
+			}
+		</style>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				const source = document.querySelector("#source");
+				const dist = document.querySelector("#dist");
+				const fileSelector = document.querySelector("#file");
+				const srcWidth = document.querySelector("#srcWidth");
+				const srcHeight = document.querySelector("#srcHeight");
+				const distWidth = document.querySelector("#distWidth");
+				const distHeight = document.querySelector("#distHeight");
+
+				const getSource = () => {
+					const sources = Array.from(source.getElementsByTagName("img"));
+					if (sources.length === 0) return null;
+					return sources[0];
+				};
+
+				const update = () => {
+					const srcImage = getSource();
+					const context = dist.getContext("2d");
+					const w = srcWidth.value || 1;
+					const h = srcHeight.value || 1;
+					dist.width = distWidth.value;
+					dist.height = distHeight.value;
+
+					// 左上
+					context.drawImage(
+						srcImage,
+						0,
+						0,
+						w,
+						h,
+						0,
+						0,
+						w,
+						h
+					);
+					// 右上
+					context.drawImage(
+						srcImage,
+						srcImage.width - w,
+						0,
+						w,
+						h,
+						dist.width - w,
+						0,
+						w,
+						h
+					);
+					// 左下
+					context.drawImage(
+						srcImage,
+						0,
+						srcImage.height - h,
+						w,
+						h,
+						0,
+						dist.height - h,
+						w,
+						h
+					);
+					// 右下
+					context.drawImage(
+						srcImage,
+						srcImage.width - w,
+						srcImage.height - h,
+						w,
+						h,
+						dist.width - w,
+						dist.height - h,
+						w,
+						h
+					);
+					// 上
+					context.drawImage(
+						srcImage,
+						w,
+						0,
+						srcImage.width - w * 2,
+						h,
+						w,
+						0,
+						dist.width - w * 2,
+						h
+					);
+					// 左
+					context.drawImage(
+						srcImage,
+						0,
+						h,
+						w,
+						srcImage.height - h * 2,
+						0,
+						h,
+						w,
+						dist.height - h * 2
+					);
+					// 右
+					context.drawImage(
+						srcImage,
+						srcImage.width - w,
+						h,
+						w,
+						srcImage.height - h * 2,
+						dist.width - w,
+						h,
+						w,
+						dist.height - h * 2
+					);
+					// 下
+					context.drawImage(
+						srcImage,
+						w,
+						srcImage.height - h,
+						srcImage.width - w * 2,
+						h,
+						w,
+						dist.height - h,
+						dist.width - w * 2,
+						h
+					);
+					// 真ん中
+					context.drawImage(
+						srcImage,
+						w,
+						h,
+						srcImage.width - w * 2,
+						srcImage.height - h * 2,
+						w,
+						h,
+						dist.width - w * 2,
+						dist.height - h * 2
+					);
+				};
+
+				fileSelector.addEventListener("change", (e) => {
+					const files = fileSelector.files;
+					if (files.length === 0) return;
+					const reader = new FileReader();
+					reader.addEventListener("load", (e) => {
+						source.innerHTML = "";
+						const canvas = document.createElement("canvas");
+						const image = new Image();
+						image.src = e.target.result;
+						source.appendChild(image);
+						image.addEventListener("load", () => {
+							update();
+						}, {once: true});
+					}, { once: true});
+					reader.readAsDataURL(files[0]);
+				});
+
+				srcWidth.addEventListener("change", update);
+				srcHeight.addEventListener("change", update);
+				distWidth.addEventListener("change", update);
+				distHeight.addEventListener("change", update);
+
+			}, {once: true});
+		</script>
+	</head>
+	<body>
+		<div>
+			<input type="file" id="file" />
+			src-w: <input id="srcWidth" type="number" value="20" />
+			src-h: <input id="srcHeight" type="number" value="20" />
+			dist-w: <input id="distWidth" type="number" value="480" />
+			dist-h: <input id="distHeight" type="number" value="480" />
+		</div>
+		<div id="source">
+		</div>
+		<div id="distContainer">
+			<canvas id="dist" width="480" height="480"></canvas>
+		</div>
+	</body>
+</html>

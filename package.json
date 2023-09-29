@@ -1,0 +1,19 @@
+{
+  "name": "ninepatch-tester",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shinonomekazan/ninepatch-tester.git"
+  },
+  "author": "tsugehara <tsugehara@gmail.com> (https://github.com/tsugehara)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shinonomekazan/ninepatch-tester/issues"
+  },
+  "homepage": "https://github.com/shinonomekazan/ninepatch-tester#readme"
+}
